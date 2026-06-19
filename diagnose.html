@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Firebase diagnose</title>
+  <link rel="stylesheet" href="styles.css?v=3" />
+</head>
+<body>
+  <main class="app-shell">
+    <article class="card">
+      <p class="eyebrow">Firebase diagnose</p>
+      <h1>Test live forbindelse</h1>
+      <p class="muted">Denne side tester om GitHub Pages kan læse og skrive til din Realtime Database.</p>
+      <p><strong>Status:</strong> <span id="status">Starter…</span></p>
+      <button class="button primary" id="writeBtn" type="button">Skriv test-svar til Firebase</button>
+      <pre id="output" style="white-space:pre-wrap;background:#fff9e7;border-radius:16px;padding:12px;overflow:auto;"></pre>
+      <p><a href="index.html?v=3">Tilbage til invitationen</a></p>
+    </article>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { firebaseConfig } from "./firebase-config.js?v=3";
+
+    const status = document.getElementById("status");
+    const output = document.getElementById("output");
+    const btn = document.getElementById("writeBtn");
+
+    function log(msg) {
+      output.textContent = `${new Date().toLocaleTimeString("da-DK")} - ${msg}\n` + output.textContent;
+    }
+
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      const rsvpsRef = ref(db, "rsvps");
+      status.textContent = "Forbundet til Firebase. Lytter efter live data…";
+      log("Config OK: " + firebaseConfig.databaseURL);
+
+      onValue(rsvpsRef, snapshot => {
+        status.textContent = "Live læsning virker";
+        log("Ny live data: " + JSON.stringify(snapshot.val(), null, 2));
+      }, error => {
+        status.textContent = "Læsning fejlede";
+        log("READ ERROR: " + error.message);
+      });
+
+      btn.addEventListener("click", async () => {
+        try {
+          await set(ref(db, "rsvps/FirebaseTest"), {
+            username: "FirebaseTest",
+            fullName: "Firebase Test",
+            answer: "Ja",
+            updatedAt: new Date().toISOString(),
+            updatedAtText: "Test " + new Date().toLocaleString("da-DK")
+          });
+          log("WRITE OK: test-svar gemt under rsvps/FirebaseTest");
+        } catch (error) {
+          status.textContent = "Skrivning fejlede";
+          log("WRITE ERROR: " + error.message);
+        }
+      });
+    } catch (error) {
+      status.textContent = "Firebase startede ikke";
+      log("INIT ERROR: " + error.message);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "rules": {
+    ".read": true,
+    "rsvps": {
+      "$username": {
+        ".write": true,
+        ".validate": "newData.hasChildren(['username', 'fullName', 'answer', 'updatedAt']) && newData.child('username').isString() && newData.child('fullName').isString() && newData.child('updatedAt').isString() && (newData.child('answer').val() === 'Ja' || newData.child('answer').val() === 'Måske' || newData.child('answer').val() === 'Nej')"
+      }
+    },
+    "posts": {
+      "$postId": {
+        ".write": true,
+        ".validate": "newData.hasChildren(['text', 'author', 'createdAt']) && newData.child('text').isString() && newData.child('author').isString() && newData.child('createdAt').isNumber()"
+      }
+    },
+    "guests": {
+      "$username": {
+        ".write": true,
+        ".validate": "newData.hasChildren(['username', 'fullName', 'isAdmin', 'createdAt']) && newData.child('username').isString() && newData.child('fullName').isString() && newData.child('isAdmin').isBoolean() && newData.child('createdAt').isNumber()"
+      }
+    }
+  }
+}

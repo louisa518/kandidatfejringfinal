@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#505f38" />
+  <title>Forsinket kandidatfejring - Louisa Xu</title>
+  <link rel="stylesheet" href="styles.css?v=50" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="site-header hidden" id="siteHeader">
+      <div>
+        <p class="eyebrow">Forsinket kandidatfejring</p>
+        <h1>Louisa Xu</h1>
+      </div>
+      <button class="icon-button" id="logoutButton" type="button">Log ud</button>
+    </header>
+
+    <nav class="tab-bar hidden" id="tabBar" aria-label="Navigation">
+      <button class="tab active" data-view="info" type="button">Info</button>
+      <button class="tab" data-view="rsvp" type="button">RSVP</button>
+      <button class="tab" data-view="news" type="button">News</button>
+      <button class="tab" data-view="stats" type="button">Stats</button>
+      <button class="tab admin-only hidden" data-view="admin" type="button">Admin</button>
+    </nav>
+
+    <main>
+      <section class="login-screen" id="loginView">
+        <div class="login-card">
+          <div class="hero-image-wrapper">
+            <img src="event-image.png" alt="Gården på Holger Danskes Vej" />
+          </div>
+          <p class="eyebrow">Du er inviteret til</p>
+          <h2>Forsinket kandidatfejring</h2>
+          <p class="muted">Log ind med dit fornavn og din kode for at se invitationen.</p>
+
+          <form id="loginForm" class="form-stack">
+            <label>
+              Brugernavn
+              <input id="loginUsername" type="text" autocomplete="username" placeholder="Fx Jens" required />
+            </label>
+            <label>
+              Kode
+              <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Fx Jens123" required />
+            </label>
+            <button class="button primary" type="submit">Log ind</button>
+          </form>
+
+          <div class="hint-card" id="loginMessage">
+            <strong>Brugernavn:</strong> Dit fornavn med stort begyndelsesbogstav.<br />
+            <strong>Adgangskode:</strong> Dit fornavn med stort begyndelsesbogstav efterfulgt af 123.
+          </div>
+        </div>
+      </section>
+
+      <section class="view active" id="infoView">
+        <article class="hero-card">
+          <div class="hero-image-wrapper">
+            <img src="event-image.png" alt="Gården på Holger Danskes Vej" />
+          </div>
+          <div class="beer">🍻</div>
+          <h2>Kom og drik nogle øl!</h2>
+          <p>Efter alt for mange eksamener, opgaver og koffein er jeg endelig blevet kandidat. Du er derfor inviteret til en lidt forsinket fejring af mig, inden jeg officielt træder ind i hamsterhjulet.</p>
+          <div class="button-row">
+            <button class="button primary" data-jump="rsvp" type="button">Svar nu</button>
+            <button class="button secondary" data-jump="stats" type="button">Se gæsteliste</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Event details</h3>
+          <p><strong>Dato:</strong> <span id="eventDate"></span></p>
+          <p><strong>Tidspunkt:</strong> <span id="eventTime"></span></p>
+          <p><strong>Adresse:</strong> <span id="eventAddress"></span></p>
+        </article>
+
+        <article class="card">
+          <h3>What to expect</h3>
+          <ul>
+            <li>Masser af øl</li>
+            <li>Mad, nok pizza</li>
+            <li>Forhåbentlig god stemning og godt selskab</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3>Need-to-know</h3>
+          <p>Det bliver holdt i gården, så vi krydser fingre for godt vejr. Hvis vejret driller, finder jeg en løsning — men hvis det regner meget, kan det være, at jeg desværre bliver nødt til at aflyse.</p>
+          <p>Da det stadig er en hverdag, tager vi hensyn til naboerne. Derfor kan det være, at vi rykker videre omkring kl. 20 eller 21.</p>
+          <p>- Louisa</p>
+        </article>
+      </section>
+
+      <section class="view" id="rsvpView">
+        <article class="card center">
+          <p class="eyebrow">RSVP</p>
+          <h2 id="rsvpGreeting">Skal du med?</h2>
+          <p class="muted">Svar her, så jeg kan holde styr på, hvem der kommer.</p>
+          <div class="answer-grid">
+            <button class="answer-button yes" data-answer="Ja" type="button">Ja</button>
+            <button class="answer-button maybe" data-answer="Måske" type="button">Måske</button>
+            <button class="answer-button no" data-answer="Nej" type="button">Nej</button>
+          </div>
+        </article>
+
+        <article class="card" id="myAnswerCard">
+          <h3>Dit svar</h3>
+          <p id="myAnswerText">Du har ikke svaret endnu.</p>
+          <p class="small muted" id="myAnswerUpdated"></p>
+        </article>
+      </section>
+
+      <section class="view" id="newsView">
+        <article class="card">
+          <p class="eyebrow">News</p>
+          <h2>Opslag fra Louisa</h2>
+          <p class="muted">Hold dig opdateret</p>
+        </article>
+        <div id="postsList" class="post-list"></div>
+      </section>
+
+      <section class="view" id="statsView">
+        <article class="card">
+          <div class="live-row">
+            <div>
+              <p class="eyebrow">Live status</p>
+              <h2>Gæsteliste</h2>
+            </div>
+            <span class="connection-pill" id="connectionStatus">Forbinder…</span>
+          </div>
+          <p class="muted">Tallene og navnene opdateres automatisk, når nogen svarer.</p>
+          <p class="small muted" id="lastLiveUpdate">Venter på første live-opdatering…</p>
+        </article>
+
+        <section class="summary-grid">
+          <article class="summary-card yes">
+            <span id="yesCount">0</span>
+            <p>Deltager</p>
+          </article>
+          <article class="summary-card maybe">
+            <span id="maybeCount">0</span>
+            <p>Måske</p>
+          </article>
+          <article class="summary-card no">
+            <span id="noCount">0</span>
+            <p>Deltager ikke</p>
+          </article>
+          <article class="summary-card missing">
+            <span id="missingCount">0</span>
+            <p>Mangler svar</p>
+          </article>
+        </section>
+
+        <section class="list-grid">
+          <article class="list-card yes">
+            <h3>Deltager</h3>
+            <ul id="yesList"></ul>
+          </article>
+          <article class="list-card maybe">
+            <h3>Måske</h3>
+            <ul id="maybeList"></ul>
+          </article>
+          <article class="list-card no">
+            <h3>Deltager ikke</h3>
+            <ul id="noList"></ul>
+          </article>
+          <article class="list-card missing">
+            <h3>Mangler svar</h3>
+            <ul id="missingList"></ul>
+          </article>
+        </section>
+      </section>
+
+      <section class="view" id="adminView">
+        <article class="card">
+          <p class="eyebrow">Admin</p>
+          <h2>Adminpanel</h2>
+          <p class="muted">Kun Louisa får vist denne fane. Her kan du lave opslag og tilføje ekstra gæster.</p>
+        </article>
+
+        <article class="card">
+          <h3>Lav nyt opslag</h3>
+          <form id="postForm" class="form-stack">
+            <label>
+              Besked
+              <textarea id="postText" rows="4" placeholder="Fx Husk en varm trøje til gården." required></textarea>
+            </label>
+            <button class="button primary" type="submit">Publicér opslag</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <h3>Tilføj ekstra gæst</h3>
+          <form id="guestForm" class="form-stack">
+            <label>
+              Fornavn/login
+              <input id="newGuestUsername" type="text" placeholder="Fx Sofie" required />
+            </label>
+            <label>
+              Fulde navn
+              <input id="newGuestFullName" type="text" placeholder="Fx Sofie Hansen" required />
+            </label>
+            <button class="button primary" type="submit">Tilføj gæst</button>
+          </form>
+          <p class="small muted">Koden bliver automatisk fornavn + 123, fx Sofie123.</p>
+        </article>
+
+        <article class="card">
+          <h3>Alle inviterede</h3>
+          <ul id="adminGuestList" class="plain-list"></ul>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="app.js?v=50"></script>
+</body>
+</html>
